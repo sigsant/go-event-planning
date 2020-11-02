@@ -22,7 +22,7 @@ type Evento struct {
 /*
  * CrearActividad solicita al usuario los datos de inicio (horas, minutos) y nombre de la actividad
  */
-func CrearActividad() (h Horario, actividad string) {
+func CrearActividad() (Horario, string) {
 	entradaDatos := bufio.NewScanner(os.Stdin)
 	fmt.Print("\n\tIntroduce la hora de inicio de la actividad: ")
 	entradaDatos.Scan()
