@@ -3,7 +3,18 @@
 
 Go-Event Planning es una aplicación escrita en línea de comandos que permite la creación,
 modificación y eliminación de eventos -organizados en fecha y actividad- mediante la manipulación de 
-ficheros csv.
+ficheros csv. 
+
+## Funciones actuales
+
+* Permite añadir eventos. Estos se guardan por defecto en el directorio del programa 
+con el nombre de "planning.csv".
+
+## Funciones por realizar
+
+* Mostrar los datos guardados por CSV en pantalla, por peticion del usuario
+* Editar eventos
+* Eliminar eventos
 
 **El programa actualmente no es funcional**
 
