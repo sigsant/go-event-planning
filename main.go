@@ -2,60 +2,29 @@ package main
 
 import (
 	"bufio"
-	"encoding/csv"
 	"errors"
 	"fmt"
 	"log"
 	"os"
 	"strings"
-	"taskEvent/modules/evento"
+
+	evento "taskEvent/modules/evento"
 )
 
 var (
 	errOptionInvalid = errors.New("ERROR: Selección inválida")
 )
-var planningEvent map[string]string
-
-/*
- * crearEvento guarda el evento creado en un array de 2 dimensiones
- * y lo guarda posteriormente en un archivo CSV.
- */
-func crearEvento(horario string, evento string) {
-	var planningEvent [][]string
-	var row []string
-
-	row = []string{horario, evento}
-	planningEvent = append(planningEvent, row)
-
-	// return planningEvent
-	// //TODO? Usar como debug aqui y reutilizarlo para el menú mostrar
-	// for i := range planningEvent {
-	// 	fmt.Println("\t", planningEvent[1][i])
-	// }
-	crearCSV(planningEvent)
-}
-
-func crearCSV(planning [][]string) {
-	csvFile, err := os.OpenFile("planning.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
-	if err != nil {
-		log.Fatalf("No ha sido posible crear el fichero %s.", err)
-	}
-	defer csvFile.Close()
-
-	csvwriter := csv.NewWriter(csvFile)
-	for _, filaCsv := range planning {
-		_ = csvwriter.Write(filaCsv)
-	}
-	csvwriter.Flush()
-}
+var (
+	planningEvent [][]string
+)
 
 /*
  * verificarOpcion comprueba si el usuario ha introducido la opción correcta del menú.
  * Sale del programa si se ha introducido una opción incorrecta.
  */
 func verificarOpcion(sel string) (string, error) {
-	// opciones := []string{"Mostrar", "Agregar", "Editar", "Borrar"}
-	opciones := []string{"C", "E", "B", "M"}
+	// opciones := []string{"Mostrar", "Agregar", "Editar", "Borrar", "Salir"}
+	opciones := []string{"C", "E", "B", "M", "S"}
 
 	for _, v := range opciones {
 		if v == strings.ToUpper(sel) {
@@ -76,6 +45,7 @@ func mostrarMenu() {
 	fmt.Println("\t*(E)ditar evento (Placeholder)")
 	fmt.Println("\t*(B)orrar evento (Placeholder)")
 	fmt.Println("\t*(M)ostrar eventos guardados (Placeholder)")
+	fmt.Println("\t*(S)alir del programa")
 }
 
 func main() {
@@ -92,10 +62,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	test := evento.Horario{8, 25}
-	horario, evento := evento.NuevoEvento(test, "Mirar")
-	crearEvento(horario, evento)
-
-	// ioutil.WriteFile("Planning.txt", []byte(planning), 0644)
-
+	switch opcion {
+	case "C":
+		horario, actividad := evento.CrearActividad()
+		horarioFormato, actividadFormato := evento.FormatoEvento(horario, actividad)
+		planningEvent = evento.CrearEvento(horarioFormato, actividadFormato)
+	case "S":
+		os.Exit(0)
+	}
 }
