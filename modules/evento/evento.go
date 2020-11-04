@@ -14,14 +14,11 @@ type Horario struct {
 	Minutos int
 }
 type Evento struct {
-	Horario     Horario
-	Nombre      string
-	Descripcion string
+	Horario Horario
+	Nombre  string
 }
 
-/*
- * CrearActividad solicita al usuario los datos de inicio (horas, minutos) y nombre de la actividad
- */
+// CrearActividad solicita al usuario los datos de inicio (horas, minutos) y nombre de la actividad
 func CrearActividad() (Horario, string) {
 	entradaDatos := bufio.NewScanner(os.Stdin)
 	fmt.Print("\n\tIntroduce la hora de inicio de la actividad: ")
@@ -36,11 +33,9 @@ func CrearActividad() (Horario, string) {
 	return Horario{horaInt, minutoInt}, actividad
 }
 
-/*
- * FormatoEvento modifica el horario según el sistema de 24 horas (00:00 - 23:59).
- * Crea una plantilla base para mostrar en el fichero CSV.
- * Devuelve los valores horario y nombre del evento en formato string.
- */
+// FormatoEvento modifica el horario según el sistema de 24 horas (00:00 - 23:59).
+// Crea una plantilla base para mostrar en el fichero CSV.
+// Devuelve los valores horario y nombre del evento en formato string.
 func FormatoEvento(h Horario, n string) (string, string) {
 	horaCero := "0" + strconv.Itoa(h.Horas)
 	minutoCero := "0" + strconv.Itoa(h.Minutos)
@@ -65,10 +60,8 @@ func FormatoEvento(h Horario, n string) (string, string) {
 	return horaPlanning, nombrePlanning
 }
 
-/*
- * CrearEvento guarda el evento creado en un array de 2 dimensiones.
- * Devuelve el array multidimensional {hora, evento}
- */
+// CrearEvento guarda el evento creado en un array de 2 dimensiones.
+// Devuelve el array multidimensional {hora, evento}
 func CrearEvento(horario string, evento string) [][]string {
 	var planningEvent [][]string
 	var row []string
@@ -84,10 +77,8 @@ func CrearEvento(horario string, evento string) [][]string {
 	return planningEvent
 }
 
-/*
- * CrearCSV crea un fichero CSV con los datos de los eventos guardados en un array multidmensional.
- * En caso de existir previamente, añade la información al fichero.
- */
+// CrearCSV crea un fichero CSV con los datos de los eventos guardados en un array multidmensional.
+// En caso de existir previamente, añade la información al fichero.
 func CrearCSV(planning [][]string) {
 	csvFile, err := os.OpenFile("planning.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
