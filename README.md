@@ -9,10 +9,10 @@ ficheros csv.
 
 * Permite añadir eventos. Estos se guardan por defecto en el directorio del programa 
 con el nombre de "planning.csv".
+* Mostrar los datos guardados por CSV en pantalla, por peticion del usuario
 
 ## Funciones por realizar
 
-* Mostrar los datos guardados por CSV en pantalla, por peticion del usuario
 * Editar eventos
 * Eliminar eventos
 
