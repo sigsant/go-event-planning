@@ -6,7 +6,8 @@ modificación y eliminación de eventos -organizados en fecha y actividad- media
 ficheros csv. 
 
 El usuario puede establecer el nombre de fichero que se guarda y/o abre con el siguiente tag:
-    -csv nombreFichero.csv
+
+        -csv nombreFichero.csv
 
 ## Funciones actuales
 
