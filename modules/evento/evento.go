@@ -1,8 +1,13 @@
+// El paquete evento esta considerado para usarse para el formato de los nuevos eventos
+// y su posterior codificacion en un fichero CSV.
+// Para el caso de decodificacion, usar el modulo csvline
+
 package evento
 
 import (
 	"bufio"
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -17,6 +22,8 @@ type Evento struct {
 	Horario Horario
 	Nombre  string
 }
+
+var errHorarioFueraRango = errors.New("ERROR: La hora introducida debe estar entre las 00:00 y 23:59")
 
 // CrearActividad solicita al usuario los datos de inicio (horas, minutos) y nombre de la actividad
 func CrearActividad() (Horario, string) {
@@ -33,6 +40,15 @@ func CrearActividad() (Horario, string) {
 	return Horario{horaInt, minutoInt}, actividad
 }
 
+// CheckRangoHora comprueba si el horario está incluido entre las 00:00 y las 23:59.
+// En caso negativo informa al usuario con un error de "Horario fuera de rango"
+func CheckRangoHora(h Horario) error {
+	if h.Horas < 0 || h.Horas > 23 && h.Minutos < 0 || h.Minutos > 59 {
+		return errHorarioFueraRango
+	}
+	return nil
+}
+
 // FormatoEvento modifica el horario según el sistema de 24 horas (00:00 - 23:59).
 // Crea una plantilla base para mostrar en el fichero CSV.
 // Devuelve los valores horario y nombre del evento en formato string.
@@ -40,6 +56,11 @@ func FormatoEvento(h Horario, n string) (string, string) {
 	horaCero := "0" + strconv.Itoa(h.Horas)
 	minutoCero := "0" + strconv.Itoa(h.Minutos)
 	var horaPlanning, nombrePlanning string
+
+	err := CheckRangoHora(h)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if h.Horas < 10 && h.Minutos < 10 {
 		horaPlanning = fmt.Sprintf("Hora: %s:%s", horaCero, minutoCero)
@@ -69,18 +90,13 @@ func CrearEvento(horario string, evento string) [][]string {
 	row = []string{horario, evento}
 	planningEvent = append(planningEvent, row)
 
-	// //TODO? Usar como debug aqui y reutilizarlo para el menú mostrar
-	// for i := range planningEvent {
-	// 	fmt.Println("\t", planningEvent[1][i])
-	// }
-	CrearCSV(planningEvent)
 	return planningEvent
 }
 
 // CrearCSV crea un fichero CSV con los datos de los eventos guardados en un array multidmensional.
 // En caso de existir previamente, añade la información al fichero.
-func CrearCSV(planning [][]string) {
-	csvFile, err := os.OpenFile("planning.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+func CrearCSV(planning [][]string, fichero *string) {
+	csvFile, err := os.OpenFile(*fichero, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		log.Fatalf("No ha sido posible crear el fichero %s.", err)
 	}
